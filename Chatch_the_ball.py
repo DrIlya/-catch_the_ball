@@ -9,25 +9,23 @@ class Ball:
 
         self.x = rnd(100, 700)
         self.y = rnd(100, 500)
-        self.r = rnd(30, 50)
+        self.r = rnd(20, 30)
 
         self.a = rnd(-3, 3)
         self.b = rnd(-3, 3)
-
-        self.n = n
 
         self.ball = self.canvas.create_oval(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r,
                                             fill=choice(colors),
                                             width=0)
 
     def move(self):
-        if self.r < self.x < 800 - self.r and self.r < self.y < 580 - self.r:
+        if self.r < self.x < 800 - self.r and self.r < self.y < 575 - self.r:
             self.canvas.move(self.ball, self.a, self.b)
         elif self.x < self.r or self.x > 800 - self.r:
             self.a = (-self.a) * rnd(1, 2)
             self.b = rnd(-2, 2)
             self.canvas.move(self.ball, self.a, self.b)
-        elif self.y < self.r or self.y > 580 - self.r:
+        elif self.y < self.r or self.y > 575 - self.r:
             self.b = (-self.b) * rnd(1, 2)
             self.a = rnd(-2, 2)
             self.canvas.move(self.ball, self.a, self.b)
@@ -37,10 +35,40 @@ class Ball:
 
         root.after(10, self.move)
 
-    def score(self, event):
+    def catch(self, event):
         if ((self.x - event.x) ** 2) + ((self.y - event.y) ** 2) < self.r ** 2:
-            self.n += 1
-        Label_1["text"] = str(self.n)
+            return True
+
+    def new(self):
+        self.canvas.delete(self.ball)
+
+        self.x = rnd(100, 700)
+        self.y = rnd(100, 500)
+        self.r = rnd(20, 30)
+
+        self.a = rnd(-3, 3)
+        self.b = rnd(-3, 3)
+
+        self.ball = self.canvas.create_oval(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r,
+                                            fill=choice(colors),
+                                            width=0)
+
+
+def score(event):
+    global n
+    if ball_1.catch(event):
+        n += 1
+        ball_1.new()
+
+    elif ball_2.catch(event):
+        n += 1
+        ball_2.new()
+
+    elif ball_3.catch(event):
+        n += 1
+        ball_3.new()
+
+    Label_1["text"] = str(n)
 
 
 root = Tk()
@@ -59,6 +87,13 @@ Label_1.pack()
 
 ball_1 = Ball(canv)
 ball_1.move()
-canv.bind('<Button-1>', ball_1.score)
+
+ball_2 = Ball(canv)
+ball_2.move()
+
+ball_3 = Ball(canv)
+ball_3.move()
+
+canv.bind('<Button-1>', score)
 
 mainloop()
