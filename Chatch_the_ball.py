@@ -3,6 +3,7 @@ from random import randrange as rnd, choice
 
 
 class Ball:
+    """Create ball with random size and color."""
 
     def __init__(self, canvas):
         self.canvas = canvas
@@ -54,6 +55,40 @@ class Ball:
                                             width=0)
 
 
+class Square:
+    """Create purple square with random size."""
+
+    def __init__(self, canvas):
+        self.canvas = canvas
+
+        self.x = rnd(100, 700)
+        self.y = rnd(100, 500)
+        self.r = rnd(5, 7)
+
+        self.square = self.canvas.create_rectangle(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r,
+                                                   fill='purple',
+                                                   width=0)
+
+    def catch(self, event):
+        if self.x - self.r <= event.x <= self.x + self.r and self.y - self.r <= event.y <= self.y + self.r:
+            return True
+
+    def new(self):
+        self.canvas.delete(self.square)
+
+        self.x = rnd(100, 700)
+        self.y = rnd(100, 500)
+        self.r = rnd(5, 7)
+
+        self.square = self.canvas.create_rectangle(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r,
+                                                   fill='purple',
+                                                   width=0)
+
+    def newNew(self):
+        self.new()
+        root.after(1000, self.newNew)
+
+
 def score(event):
     global n
     if ball_1.catch(event):
@@ -67,6 +102,10 @@ def score(event):
     elif ball_3.catch(event):
         n += 1
         ball_3.new()
+
+    elif square_1.catch(event):
+        n += 2
+        square_1.new()
 
     Label_1["text"] = str(n)
 
@@ -93,6 +132,9 @@ ball_2.move()
 
 ball_3 = Ball(canv)
 ball_3.move()
+
+square_1 = Square(canv)
+square_1.newNew()
 
 canv.bind('<Button-1>', score)
 
