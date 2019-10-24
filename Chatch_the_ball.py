@@ -99,24 +99,16 @@ class Square:
 
 def score(event):
     global n
-    if ball_1.catch(event):
-        n += 1
-        ball_1.new()
 
-    elif ball_2.catch(event):
-        n += 1
-        ball_2.new()
+    for i in range(N_ball):
+        if ball_list[i].catch(event):
+            n += 1
+            ball_list[i].new()
 
-    elif ball_3.catch(event):
-        n += 1
-        ball_3.new()
-
-    elif square_1.catch(event):
-        n += 2
-        square_1.new()
-    elif square_2.catch(event):
-        n += 2
-        square_2.new()
+    for j in range(N_square):
+        if square_list[j].catch(event):
+            n += 2
+            square_list[j].new()
 
     Label_1["text"] = str(n)
 
@@ -125,10 +117,12 @@ def newGame(event):
     global n
     n = 0
     Label_1["text"] = str(n)
-    ball_1.new()
-    ball_2.new()
-    ball_3.new()
-    square_1.new()
+
+    for i in range(N_ball):
+        ball_list[i].new()
+
+    for j in range(N_square):
+        square_list[j].new()
 
 
 def putYourName(event):
@@ -158,11 +152,12 @@ def theGame(event):
         canv.pack(fill=BOTH, expand=1)
         Label_1.pack()
         Label_2.pack()
-        ball_1.move()
-        ball_2.move()
-        ball_3.move()
-        square_1.newNew()
-        square_2.newNew()
+
+        for i in range(N_ball):
+            ball_list[i].move()
+
+        for j in range(N_square):
+            square_list[j].newNew()
 
         timer()
 
@@ -194,6 +189,8 @@ def exitGame_2():
     scores.write(text)
     scores.close()
 
+    root.destroy()
+
 
 def timer():
     global temp
@@ -203,7 +200,6 @@ def timer():
         temp += 1
     else:
         exitGame_2()
-        root.destroy()
 
 
 def get_key(item):
@@ -224,11 +220,15 @@ temp = 0
 Label_1 = Label(root, text=str(n))
 Label_2 = Label(root, text='')
 
-ball_1 = Ball(canv)
-ball_2 = Ball(canv)
-ball_3 = Ball(canv)
-square_1 = Square(canv)
-square_2 = Square(canv)
+N_ball = 5
+ball_list = []
+for i in range(N_ball):
+    ball_list.append(Ball(canv))
+
+N_square = 5
+square_list = []
+for i in range(N_square):
+    square_list.append(Square(canv))
 
 label_01 = Label(root, text='Меню', font=2, width=70, bg='yellow')
 button_01 = Button(root, text='Начать игру', font=2, width=70, height=5, fg='green')
